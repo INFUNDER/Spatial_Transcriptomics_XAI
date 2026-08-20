@@ -1,0 +1,25 @@
+# Data and model checkpoints
+hest_data/
+histogene_input/
+checkpoints/
+*.pth
+*.pt
+*.h5ad
+
+# PBS log files
+*.o*
+*.e*
+*.log
+
+# Python cache
+__pycache__/
+*.pyc
+
+# Virtual environments
+.env
+venv/
+env/
+miniconda3/
+
+# Downloaded files
+HEST_v1_3_0_local.csv

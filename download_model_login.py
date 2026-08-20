@@ -1,0 +1,17 @@
+import timm
+import pandas as pd
+from huggingface_hub import login
+
+import os
+token = os.environ.get("HF_TOKEN")
+if token:
+    login(token=token)
+
+print("Downloading/Caching UNI model...")
+model = timm.create_model("hf-hub:MahmoodLab/UNI", pretrained=True, init_values=1e-5, dynamic_img_size=True)
+
+print("Downloading/Caching HEST CSV...")
+meta_df = pd.read_csv("hf://datasets/MahmoodLab/hest/HEST_v1_3_0.csv", storage_options={'token': token})
+meta_df.to_csv("HEST_v1_3_0_local.csv", index=False)
+
+print("Pre-download completed!")

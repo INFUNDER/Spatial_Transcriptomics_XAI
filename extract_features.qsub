@@ -1,0 +1,20 @@
+#!/bin/bash
+#PBS -N feature_extraction
+#PBS -l select=1:ncpus=4:ngpus=1:mem=32gb
+#PBS -l walltime=04:00:00
+#PBS -q gpu
+
+cd $PBS_O_WORKDIR
+
+# Activate conda environment
+source ~/miniconda3/etc/profile.d/conda.sh
+conda activate spatial_xai
+
+# Set huggingface to offline mode since the GPU node doesn't have internet
+export HF_HUB_OFFLINE=1
+
+# Extract features using UNI
+python extract_features.py
+
+# Format extracted features and ST data for HisToGene
+python format_data_histogene.py
