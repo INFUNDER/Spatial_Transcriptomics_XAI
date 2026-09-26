@@ -1,0 +1,27 @@
+#!/bin/bash
+#PBS -N cbm_pipeline
+#PBS -l select=1:ncpus=4:ngpus=1:mem=32gb
+#PBS -l walltime=08:00:00
+#PBS -q gpu
+
+cd $PBS_O_WORKDIR
+
+# Activate conda environment
+source ~/miniconda3/etc/profile.d/conda.sh
+conda activate spatial_xai
+
+# Set HF_HUB_OFFLINE if the node doesn't have internet access
+# export HF_HUB_OFFLINE=1
+
+echo "Starting Concept Bottleneck Model Pipeline..."
+
+echo "\n--- 1. Extracting VLM Concepts ---"
+python extract_concepts.py
+
+echo "\n--- 2. Formatting Data and Running ssGSEA ---"
+python format_data_cbm.py
+
+echo "\n--- 3. Training GATv2 Spatial Concept Model ---"
+python train_cbm_gat.py
+
+echo "\nPipeline Completed!"

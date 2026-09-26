@@ -10,6 +10,23 @@ import sys
 sys.path.append('HisToGene')
 from vis_model import HisToGene
 
+class ConceptBottleneck(nn.Module):
+    """Maps 1024-dim UNI features to K interpretable concepts."""
+    def __init__(self, in_features=1024, num_concepts=32, out_features=1024):
+        super().__init__()
+        # Map 1024-dim UNI features to K concepts
+        self.concept_projector = nn.Linear(in_features, num_concepts)
+        # Concepts are bounded [0, 1] for interpretability
+        self.activation = nn.Sigmoid() 
+        
+        # Map K concepts back to the dimensionality expected by HisToGene
+        self.output_projector = nn.Linear(num_concepts, out_features)
+        
+    def forward(self, x):
+        concepts = self.activation(self.concept_projector(x))
+        out = self.output_projector(concepts)
+        return out, concepts
+
 # 1. Custom Dataset for our HEST-UNI processed data
 class HestUniDataset(Dataset):
     def __init__(self, data_dir='histogene_input'):
@@ -75,7 +92,12 @@ def train():
     
     model.to(device)
     
-    optimizer = optim.Adam(model.parameters(), lr=1e-4)
+    # 3. Instantiate Concept Bottleneck Model
+    num_concepts = 32 # Placeholder: 32 interpretable pathology concepts
+    cbm = ConceptBottleneck(in_features=1024, num_concepts=num_concepts, out_features=1024).to(device)
+    
+    # Optimize both CBM and HisToGene
+    optimizer = optim.Adam(list(model.parameters()) + list(cbm.parameters()), lr=1e-4)
     criterion = nn.MSELoss()
     
     epochs = 20
@@ -98,11 +120,18 @@ def train():
             
             optimizer.zero_grad()
             
-            # Forward pass
-            pred_expr = model(patches, coords)
+            # Forward pass through Concept Bottleneck
+            cbm_features, concept_activations = cbm(patches)
             
-            # Compute loss
-            loss = criterion(pred_expr, expr)
+            # Forward pass through HisToGene GAT
+            pred_expr = model(cbm_features, coords)
+            
+            # Compute primary prediction loss
+            pred_loss = criterion(pred_expr, expr)
+            
+            # Add an L1 sparsity penalty on concepts to encourage disentangled, interpretable concepts
+            sparsity_loss = concept_activations.mean()
+            loss = pred_loss + (0.01 * sparsity_loss)
             
             # Backward pass
             loss.backward()
