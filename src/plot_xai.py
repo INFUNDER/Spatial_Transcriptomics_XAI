@@ -93,8 +93,8 @@ def generate_xai_plot():
     plt.colorbar(sc3, ax=axes[3], fraction=0.046, pad=0.04)
     
     plt.tight_layout()
-    os.makedirs('figures_supplementary', exist_ok=True)
-    out_path = 'figures_supplementary/xai_explanation.png'
+    os.makedirs('figures/supplementary', exist_ok=True)
+    out_path = 'figures/supplementary/xai_explanation.png'
     plt.savefig(out_path, dpi=300, bbox_inches='tight')
     print(f"Saved figure to {out_path}")
 

@@ -27,3 +27,4 @@ HEST_v1_3_0_local.csv
 # Large external data
 external_data/
 *.zip
+logs/

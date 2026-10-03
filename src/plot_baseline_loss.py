@@ -35,5 +35,5 @@ plt.ylim(min(loss) - 50, max(loss) + 50)
 
 # Save to file
 plt.tight_layout()
-plt.savefig('baseline_training_loss.png')
-print("Saved baseline_training_loss.png successfully.")
+plt.savefig('figures/supplementary/baseline_training_loss.png')
+print("Saved figures/supplementary/baseline_training_loss.png successfully.")

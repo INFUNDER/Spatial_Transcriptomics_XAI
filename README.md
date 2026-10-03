@@ -26,41 +26,53 @@ We rigorously tested our architecture against the leading spatial models, runnin
 | **HisToGene**| Transformer (Global Attention)| 0.6959 |
 | **Ours (CBM-GATv2)**| Graph Neural Network | **~0.7100** |
 
-*(Learning Curves available in `figures/architecture_ablation_curve.png`)*
+*(Learning Curves available in `figures/ablation/architecture_ablation_curve.png`)*
 
 ---
 
 ## 🛠️ Repository Structure
 
-*   **`extract_concepts.py`**: Interrogates the H&E image using the CONCH VLM to generate the 32-dimensional interpretable concept bottleneck.
-*   **`format_data_cbm.py`**: Runs `ssGSEA` to convert noisy spatial gene profiles into robust Biological Hallmark Pathways.
-*   **`train_cbm_gat.py`**: The core architecture and training loop for our CBM-GATv2 model.
-*   **`train_baselines.py`**: Re-implements ST-Net and HisToGene to provide rigorous architecture ablations.
-*   **`plot_ablation_heatmaps.py`**: Generates a 4-column side-by-side visual comparison (Ground Truth vs Baselines vs Ours).
-*   **`plot_xai_proof.py`**: Generates the mathematical proof of explainability, plotting exactly which Concepts the model uses to predict specific Pathways.
+```
+src/        All Python code (data prep, concept extraction, training, evaluation, plotting)
+jobs/       PBS / shell job scripts (submit from the repo root)
+data/       Small reference files (MSigDB Hallmark gene sets)
+results/    Benchmark CSVs
+figures/    spatial_predictions/ · ablation/ · he_overlay/ · xai/ · supplementary/
+docs/       Presentation deck
+```
+
+*   **`src/extract_concepts.py`**: Interrogates the H&E image using the CONCH VLM to generate the 32-dimensional interpretable concept bottleneck.
+*   **`src/format_data_cbm.py`**: Runs `ssGSEA` to convert noisy spatial gene profiles into robust Biological Hallmark Pathways.
+*   **`src/train_cbm_gat.py`**: The core architecture and training loop for our CBM-GATv2 model.
+*   **`src/train_baselines.py`**: Re-implements ST-Net and HisToGene to provide rigorous architecture ablations.
+*   **`src/test_external.py`**: Zero-shot evaluation on the unseen external 10x slide.
+*   **`src/plot_ablation_heatmaps.py`**: Generates a 4-column side-by-side visual comparison (Ground Truth vs Baselines vs Ours).
+*   **`src/plot_xai_proof.py`** / **`src/plot_xai.py`**: Explainability plots showing which Concepts drive specific Pathways.
 
 ---
 
 ## 🚀 How to Run
+All commands are run from the repository root.
 
 **1. Data Preparation**
 Ensure you have the HEST dataset available locally. 
 ```bash
-python format_data_cbm.py
-python extract_concepts.py
+python src/format_data_cbm.py
+python src/extract_concepts.py
 ```
 
 **2. Train the Model**
 ```bash
-python train_cbm_gat.py
+python src/train_cbm_gat.py
 ```
 
 **3. Generate Benchmarks & Visualizations**
 ```bash
-python train_baselines.py
-python plot_ablation.py
-python plot_ablation_heatmaps.py
-python plot_xai_proof.py
+python src/train_baselines.py
+python src/plot_ablation.py
+python src/plot_ablation_heatmaps.py
+python src/plot_xai_proof.py
+python src/test_external.py
 ```
 
 ## 📜 Dependencies

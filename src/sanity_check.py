@@ -81,9 +81,9 @@ def main():
     plt.xlabel("CONCH Extracted Concept (Cosine Similarity)")
     plt.ylabel("Human Pathologist Label")
     plt.tight_layout()
-    plt.savefig('figures_supplementary/Sanity_Check_Hallucination.png', dpi=300)
+    plt.savefig('figures/supplementary/Sanity_Check_Hallucination.png', dpi=300)
     print("Saved Sanity Check Heatmap!")
 
 if __name__ == '__main__':
-    os.makedirs('figures_supplementary', exist_ok=True)
+    os.makedirs('figures/supplementary', exist_ok=True)
     main()

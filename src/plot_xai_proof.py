@@ -53,7 +53,7 @@ def generate_xai_proofs():
             corr_matrix[c, p] = corr if not np.isnan(corr) else 0.0
             
     # Save the raw matrix
-    os.makedirs('figures_xai', exist_ok=True)
+    os.makedirs('figures/xai', exist_ok=True)
     
     # 4. Generate Interpretability Bar Charts for top 3 most predictable pathways
     # Find pathways with the strongest concept signals (highest max absolute correlation)
@@ -97,7 +97,7 @@ def generate_xai_proofs():
         plt.tight_layout()
         
         safe_name = p_name.replace(' ', '_')
-        save_path = f'figures_xai/XAI_{safe_name}.png'
+        save_path = f'figures/xai/XAI_{safe_name}.png'
         plt.savefig(save_path, dpi=300, bbox_inches='tight')
         plt.close()
         print(f"Saved XAI Proof for {p_name} to {save_path}")
@@ -109,9 +109,9 @@ def generate_xai_proofs():
                 yticklabels=pathology_concepts)
     plt.title('Global Concept-Pathway Bottleneck Correlation', fontsize=18, fontweight='bold')
     plt.tight_layout()
-    plt.savefig('figures_xai/Global_CBM_Heatmap.png', dpi=300)
+    plt.savefig('figures/xai/Global_CBM_Heatmap.png', dpi=300)
     plt.close()
-    print("Saved Global CBM Heatmap to figures_xai/Global_CBM_Heatmap.png")
+    print("Saved Global CBM Heatmap to figures/xai/Global_CBM_Heatmap.png")
 
 if __name__ == "__main__":
     generate_xai_proofs()

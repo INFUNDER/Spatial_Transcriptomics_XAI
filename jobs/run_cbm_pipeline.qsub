@@ -16,12 +16,12 @@ conda activate spatial_xai
 echo "Starting Concept Bottleneck Model Pipeline..."
 
 echo "\n--- 1. Extracting VLM Concepts ---"
-python extract_concepts.py
+python src/extract_concepts.py
 
 echo "\n--- 2. Formatting Data and Running ssGSEA ---"
-python format_data_cbm.py
+python src/format_data_cbm.py
 
 echo "\n--- 3. Training GATv2 Spatial Concept Model ---"
-python train_cbm_gat.py
+python src/train_cbm_gat.py
 
 echo "\nPipeline Completed!"

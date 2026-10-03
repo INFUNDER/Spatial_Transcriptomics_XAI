@@ -52,8 +52,8 @@ def plot_concept_correlation():
     plt.xticks(rotation=90, fontsize=10)
     plt.yticks(fontsize=10)
     
-    os.makedirs('figures_supplementary', exist_ok=True)
-    save_path = 'figures_supplementary/Concept_Correlation_Matrix.png'
+    os.makedirs('figures/supplementary', exist_ok=True)
+    save_path = 'figures/supplementary/Concept_Correlation_Matrix.png'
     plt.tight_layout()
     plt.savefig(save_path, dpi=300, bbox_inches='tight')
     plt.close()

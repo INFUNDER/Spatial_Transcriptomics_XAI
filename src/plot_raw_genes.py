@@ -39,4 +39,4 @@ def plot_top_5_genes(h5ad_path, out_path):
     print(f"Saved figure to {out_path}")
 
 if __name__ == "__main__":
-    plot_top_5_genes('hest_data/st/TENX200.h5ad', 'figures_supplementary/raw_genes_heatmap.png')
+    plot_top_5_genes('hest_data/st/TENX200.h5ad', 'figures/supplementary/raw_genes_heatmap.png')

@@ -6,7 +6,7 @@ import os
 
 def plot_ablation_curves():
     print("Loading benchmark_ablation_results.csv...")
-    df = pd.read_csv('benchmark_ablation_results.csv')
+    df = pd.read_csv('results/benchmark_ablation_results.csv')
     
     # We want to plot Test PCC over Epochs
     # Set the style to look like a high-end journal paper
@@ -63,8 +63,8 @@ def plot_ablation_curves():
     ax.legend(title='Architecture', title_fontsize='13', loc='lower right', frameon=True, shadow=True)
     
     plt.tight_layout()
-    os.makedirs('figures', exist_ok=True)
-    save_path = 'figures/architecture_ablation_curve.png'
+    os.makedirs('figures/spatial_predictions', exist_ok=True)
+    save_path = 'figures/ablation/architecture_ablation_curve.png'
     plt.savefig(save_path, dpi=300, bbox_inches='tight')
     plt.close()
     

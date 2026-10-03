@@ -12,9 +12,9 @@ source ~/miniconda3/etc/profile.d/conda.sh
 conda activate spatial_xai
 
 echo "Starting GPU-accelerated Baseline Training..."
-python train_baselines.py
+python src/train_baselines.py
 
 echo "Starting GPU-accelerated Heatmap Plotting..."
-python plot_ablation_heatmaps.py
+python src/plot_ablation_heatmaps.py
 
 echo "Job Completed Successfully!"

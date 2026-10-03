@@ -9,7 +9,7 @@ from scipy.stats import pearsonr
 def plot_spatial_results():
     print("Loading data for spatial visualization...")
     
-    os.makedirs('figures', exist_ok=True)
+    os.makedirs('figures/spatial_predictions', exist_ok=True)
     
     data_files = glob.glob('cbm_input/*_cbm_data.pt')
     if len(data_files) == 0:
@@ -103,7 +103,7 @@ def plot_spatial_results():
             plt.colorbar(sc2, ax=axes[i, 1], fraction=0.046, pad=0.04)
 
         plt.tight_layout(rect=[0, 0, 1, 0.93])
-        save_path = f'figures/{sample_name}_spatial_predictions.png'
+        save_path = f'figures/spatial_predictions/{sample_name}_spatial_predictions.png'
         plt.savefig(save_path, dpi=300, bbox_inches='tight')
         plt.close()
         print(f"Saved {sample_name} spatial plot to {save_path}")

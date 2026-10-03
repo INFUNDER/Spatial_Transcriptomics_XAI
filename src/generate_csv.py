@@ -1,7 +1,7 @@
 import re
 import csv
 
-output_csv = 'benchmark_ablation_results.csv'
+output_csv = 'results/benchmark_ablation_results.csv'
 
 with open(output_csv, 'w', newline='') as csvfile:
     writer = csv.writer(csvfile)

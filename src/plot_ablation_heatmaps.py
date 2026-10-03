@@ -24,7 +24,7 @@ def generate_comparative_heatmaps():
     histogene.load_state_dict(torch.load('checkpoints/histogene_model.pth', map_location=device))
     histogene.eval()
 
-    os.makedirs('figures_ablation', exist_ok=True)
+    os.makedirs('figures/ablation', exist_ok=True)
     
     # Process just one representative sample to save time (e.g., TENX200)
     sample_file = 'cbm_input/TENX200_cbm_data.pt'
@@ -125,7 +125,7 @@ def generate_comparative_heatmaps():
         plt.colorbar(sc3, ax=axes[i, 3], fraction=0.046, pad=0.04)
 
     plt.tight_layout(rect=[0, 0, 1, 0.96])
-    save_path = f'figures_ablation/baseline_comparison_heatmaps.png'
+    save_path = f'figures/ablation/baseline_comparison_heatmaps.png'
     plt.savefig(save_path, dpi=300, bbox_inches='tight')
     plt.close()
     print(f"Saved baseline comparison heatmaps to {save_path}")

@@ -10,7 +10,7 @@ from hest import iter_hest
 def plot_spatial_results_with_he():
     print("Loading data for H&E spatial visualization...")
     
-    os.makedirs('figures_he', exist_ok=True)
+    os.makedirs('figures/he_overlay', exist_ok=True)
     
     data_files = glob.glob('cbm_input/*_cbm_data.pt')
     if len(data_files) == 0:
@@ -108,7 +108,7 @@ def plot_spatial_results_with_he():
             plt.colorbar(sc2, ax=axes[i, 1], fraction=0.046, pad=0.04)
 
         plt.tight_layout(rect=[0, 0, 1, 0.93])
-        save_path = f'figures_he/{sample_name}_he_overlay.png'
+        save_path = f'figures/he_overlay/{sample_name}_he_overlay.png'
         plt.savefig(save_path, dpi=300, bbox_inches='tight')
         plt.close()
         print(f"Saved {sample_name} H&E plot to {save_path}")

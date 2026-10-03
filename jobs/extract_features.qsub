@@ -14,7 +14,7 @@ conda activate spatial_xai
 export HF_HUB_OFFLINE=1
 
 # Extract features using UNI
-python extract_features.py
+python src/extract_features.py
 
 # Format extracted features and ST data for HisToGene
-python format_data_histogene.py
+python src/format_data_histogene.py

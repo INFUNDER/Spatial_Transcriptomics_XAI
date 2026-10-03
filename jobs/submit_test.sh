@@ -12,5 +12,5 @@ source ~/miniconda3/etc/profile.d/conda.sh
 conda activate spatial_xai
 
 echo "Starting External Validation on 10x Genomics Visium Cohort..."
-python test_external.py
+python src/test_external.py
 echo "Job Completed Successfully!"
