@@ -28,6 +28,7 @@ def plot_spatial_results():
         features = item['features']
         coords = item['coordinates']
         pathways = item['pathways']
+        pathway_names = item.get('pathway_names', [f"Pathway {i+1}" for i in range(pathways.shape[1])])
 
         # Standardize pathways exactly as in training
         pathway_mean = pathways.mean(dim=0, keepdim=True)
@@ -80,10 +81,14 @@ def plot_spatial_results():
         axes[0, 1].set_title('Predicted Pathway Expression (Our XAI Model)', fontsize=14, pad=20)
 
         for i, (corr, p_idx) in enumerate(top_pathways):
+            pathway_name = pathway_names[p_idx]
             # True
             sc1 = axes[i, 0].scatter(coords_np[:, 0], coords_np[:, 1], c=pathways_scaled_np[:, p_idx], cmap='viridis', s=15, alpha=0.8)
             axes[i, 0].invert_yaxis() # Image coordinates usually have Y inverted
-            axes[i, 0].set_ylabel(f'Pathway {p_idx+1}\nPCC: {corr:.3f}', fontsize=12, fontweight='bold')
+            
+            # Format the pathway name nicely (remove HALLMARK_ prefix if it exists)
+            clean_name = pathway_name.replace('HALLMARK_', '').replace('_', ' ')
+            axes[i, 0].set_ylabel(f'{clean_name}\nTrue Score', fontsize=12, fontweight='bold')
             axes[i, 0].set_xticks([])
             axes[i, 0].set_yticks([])
             plt.colorbar(sc1, ax=axes[i, 0], fraction=0.046, pad=0.04)
@@ -91,7 +96,8 @@ def plot_spatial_results():
             # Predicted
             sc2 = axes[i, 1].scatter(coords_np[:, 0], coords_np[:, 1], c=preds[:, p_idx], cmap='viridis', s=15, alpha=0.8)
             axes[i, 1].invert_yaxis()
-            axes[i, 1].set_title(f'PCC: {corr:.3f}', fontsize=12)
+            axes[i, 1].set_ylabel(f'{clean_name}\nPredicted Score', fontsize=12, fontweight='bold')
+            axes[i, 1].set_title(f'Prediction PCC: {corr:.3f}', fontsize=12, fontweight='bold', color='darkred')
             axes[i, 1].set_xticks([])
             axes[i, 1].set_yticks([])
             plt.colorbar(sc2, ax=axes[i, 1], fraction=0.046, pad=0.04)

@@ -5,7 +5,6 @@ import os
 import glob
 from train_cbm_gat import SpatiallyGroundedCBM
 from train_baselines import STNet_Baseline, HisToGene_Baseline
-from hest import iter_hest
 from scipy.stats import pearsonr
 
 def generate_comparative_heatmaps():
@@ -55,14 +54,9 @@ def generate_comparative_heatmaps():
     pathways_scaled_np = pathways_scaled.numpy()
     coords_np = coords.cpu().numpy()
 
-    # Load H&E Thumbnail
-    st_data = list(iter_hest('hest_data', id_list=[sample_name]))[0]
-    width, height = st_data.wsi.get_dimensions()
-    target_width = 1000
-    target_height = int(target_width * height / width)
-    img = np.array(st_data.wsi.get_thumbnail((target_width, target_height)))
-    scale_factor = target_width / width
-    pixel_coords = coords_np * scale_factor
+    # Instead of H&E thumbnail, we will just plot the scatter points directly
+    # Since we don't have the scale factor without the WSI, we'll just plot using the raw coordinates
+    pixel_coords = coords_np
 
     # Select top 3 pathways from OUR model to plot
     pcc_scores = []
@@ -76,13 +70,13 @@ def generate_comparative_heatmaps():
     top_pathways = pcc_scores[:3]
 
     # Plot exactly like the paper (4 columns: GT, ST-Net, HisToGene, Ours)
-    fig, axes = plt.subplots(3, 4, figsize=(24, 15))
-    fig.suptitle(f'Spatial Pathway Predictions Baseline Comparison ({sample_name})', fontsize=22, fontweight='bold', y=0.98)
+    fig, axes = plt.subplots(3, 4, figsize=(32, 20))
+    fig.suptitle(f'Spatial Pathway Predictions Baseline Comparison ({sample_name})', fontsize=32, fontweight='bold', y=0.98)
     
-    axes[0, 0].set_title('Observed (Ground Truth)', fontsize=16, pad=20)
-    axes[0, 1].set_title('ST-Net Baseline', fontsize=16, pad=20)
-    axes[0, 2].set_title('HisToGene Baseline', fontsize=16, pad=20)
-    axes[0, 3].set_title('Our Model (CBM-GATv2)', fontsize=16, pad=20)
+    axes[0, 0].set_title('Observed (Ground Truth)', fontsize=24, fontweight='bold', pad=30)
+    axes[0, 1].set_title('ST-Net Baseline', fontsize=24, fontweight='bold', pad=30)
+    axes[0, 2].set_title('HisToGene Baseline', fontsize=24, fontweight='bold', pad=30)
+    axes[0, 3].set_title('Our Model (CBM-GATv2)', fontsize=24, fontweight='bold', pad=30)
 
     # Function to calculate PCC for a given prediction array
     def get_pcc(preds, gt, p_idx):
@@ -94,35 +88,38 @@ def generate_comparative_heatmaps():
         p_name = item['pathway_names'][p_idx].replace('HALLMARK_', '').replace('_', ' ')
         
         # GT
-        axes[i, 0].imshow(img)
-        sc0 = axes[i, 0].scatter(pixel_coords[:, 0], pixel_coords[:, 1], c=pathways_scaled_np[:, p_idx], cmap='magma', s=15, alpha=0.8)
-        axes[i, 0].set_ylabel(p_name, fontsize=14, fontweight='bold')
+        sc0 = axes[i, 0].scatter(pixel_coords[:, 0], pixel_coords[:, 1], c=pathways_scaled_np[:, p_idx], cmap='magma', s=20, alpha=0.9)
+        axes[i, 0].invert_yaxis()
+        axes[i, 0].set_ylabel(p_name, fontsize=20, fontweight='bold', labelpad=20)
         axes[i, 0].set_xticks([])
         axes[i, 0].set_yticks([])
         plt.colorbar(sc0, ax=axes[i, 0], fraction=0.046, pad=0.04)
         
         # ST-Net
         st_corr = get_pcc(preds_stnet, pathways_scaled_np, p_idx)
-        axes[i, 1].imshow(img)
-        sc1 = axes[i, 1].scatter(pixel_coords[:, 0], pixel_coords[:, 1], c=preds_stnet[:, p_idx], cmap='magma', s=15, alpha=0.8)
-        axes[i, 1].set_title(f'R: {st_corr:.3f}', fontsize=14)
+        sc1 = axes[i, 1].scatter(pixel_coords[:, 0], pixel_coords[:, 1], c=preds_stnet[:, p_idx], cmap='magma', s=20, alpha=0.9)
+        axes[i, 1].invert_yaxis()
+        if i != 0: axes[i, 1].set_title(f'PCC: {st_corr:.3f}', fontsize=20)
+        else: axes[i, 1].set_title('ST-Net Baseline\n' + f'PCC: {st_corr:.3f}', fontsize=24, fontweight='bold')
         axes[i, 1].set_xticks([])
         axes[i, 1].set_yticks([])
         plt.colorbar(sc1, ax=axes[i, 1], fraction=0.046, pad=0.04)
 
         # HisToGene
         hg_corr = get_pcc(preds_histogene, pathways_scaled_np, p_idx)
-        axes[i, 2].imshow(img)
-        sc2 = axes[i, 2].scatter(pixel_coords[:, 0], pixel_coords[:, 1], c=preds_histogene[:, p_idx], cmap='magma', s=15, alpha=0.8)
-        axes[i, 2].set_title(f'R: {hg_corr:.3f}', fontsize=14)
+        sc2 = axes[i, 2].scatter(pixel_coords[:, 0], pixel_coords[:, 1], c=preds_histogene[:, p_idx], cmap='magma', s=20, alpha=0.9)
+        axes[i, 2].invert_yaxis()
+        if i != 0: axes[i, 2].set_title(f'PCC: {hg_corr:.3f}', fontsize=20)
+        else: axes[i, 2].set_title('HisToGene Baseline\n' + f'PCC: {hg_corr:.3f}', fontsize=24, fontweight='bold')
         axes[i, 2].set_xticks([])
         axes[i, 2].set_yticks([])
         plt.colorbar(sc2, ax=axes[i, 2], fraction=0.046, pad=0.04)
 
         # Ours
-        axes[i, 3].imshow(img)
-        sc3 = axes[i, 3].scatter(pixel_coords[:, 0], pixel_coords[:, 1], c=preds_ours[:, p_idx], cmap='magma', s=15, alpha=0.8)
-        axes[i, 3].set_title(f'R: {our_corr:.3f}', fontsize=14, fontweight='bold', color='red')
+        sc3 = axes[i, 3].scatter(pixel_coords[:, 0], pixel_coords[:, 1], c=preds_ours[:, p_idx], cmap='magma', s=20, alpha=0.9)
+        axes[i, 3].invert_yaxis()
+        if i != 0: axes[i, 3].set_title(f'PCC: {our_corr:.3f}', fontsize=20, fontweight='bold', color='darkred')
+        else: axes[i, 3].set_title('Our Model (CBM-GATv2)\n' + f'PCC: {our_corr:.3f}', fontsize=24, fontweight='bold', color='darkred')
         axes[i, 3].set_xticks([])
         axes[i, 3].set_yticks([])
         plt.colorbar(sc3, ax=axes[i, 3], fraction=0.046, pad=0.04)
