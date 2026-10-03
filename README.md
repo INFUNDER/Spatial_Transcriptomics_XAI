@@ -22,9 +22,11 @@ We rigorously tested our architecture against the leading spatial models, runnin
 
 | Architecture | Spatial Methodology | Test PCC |
 |--------------|---------------------|-----------|
-| **ST-Net** | None (Independent Spots) | 0.6460 |
-| **HisToGene**| Transformer (Global Attention)| 0.6959 |
-| **Ours (CBM-GATv2)**| Graph Neural Network | **~0.7100** |
+| **ST-Net** | None (Independent Spots) | 0.6442 |
+| **HisToGene**| Transformer (Global Attention)| 0.6854 |
+| **Ours (CBM-GATv2)**| Graph Neural Network | **0.7188** (best; 0.7059 at epoch 500) |
+
+*(Values from `results/benchmark_ablation_results.csv`. Zero-shot on unseen external 10x slide TENX200: **0.379 PCC**.)*
 
 *(Learning Curves available in `figures/ablation/architecture_ablation_curve.png`)*
 

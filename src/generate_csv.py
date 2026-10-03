@@ -8,7 +8,7 @@ with open(output_csv, 'w', newline='') as csvfile:
     writer.writerow(['Model', 'Epoch', 'Train_MSE_Loss', 'Test_PCC'])
     
     # 1. Parse CBM-GATv2
-    with open('cbm_pipeline.o39101', 'r') as f:
+    with open('logs/cbm_pipeline.o39101', 'r') as f:
         for line in f:
             match = re.search(r'Epoch (\d+)/\d+ \| Train MSE Loss: ([0-9.]+) \| TEST PCC: ([-0-9.]+)', line)
             if match:
